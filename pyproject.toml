@@ -1,0 +1,23 @@
+[build-system]
+requires = ["scikit-build-core>=0.11", "nanobind>=2.4"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "integral-persistence"
+version = "0.1.0"
+description = "Exact persistence over all fields, with a C++ core and Python interface"
+readme = "README.md"
+requires-python = ">=3.11"
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+experiments = ["numpy>=2", "gudhi>=3.11", "dionysus>=2.1", "matplotlib>=3.9", "tqdm>=4.66"]
+
+[tool.scikit-build]
+cmake.build-type = "Release"
+wheel.packages = ["src/integral_persistence"]
+sdist.include = ["CMakeLists.txt", "requirements-reproduction.txt"]
+sdist.exclude = ["**/__pycache__/**", "**/*.pyc", "**/build/**", "**/*.so", "**/.pytest_cache/**", "results/**", "dist/**", ".venv*/**"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,37 @@
+--- a/gudhi/Persistent_cohomology/Multi_field.h
++++ b/gudhi/Persistent_cohomology/Multi_field.h
+@@ -123,7 +123,7 @@
+   Element times_minus(const Element& x, const Element& y) {
+     assert(prod_characteristics_ > 0);  // division by zero + non negative values
+     /* This assumes that (x*y)%pc cannot be zero, but Field_Zp has specific code for the 0 case ??? */
+-    return prod_characteristics_ - ((x * y) % prod_characteristics_);
++    return plus_times_equal(Element(0), x, Element(-y));
+   }
+ 
+   /** Set x <- x + w * y*/
+--- a/gudhi/Persistent_cohomology.h
++++ b/gudhi/Persistent_cohomology.h
+@@ -503,7 +503,10 @@
+ 
+           cell_tmp->coefficient_ = coeff_field_.plus_times_equal(cell_tmp->coefficient_, other_it->second, w);
+ 
+-          target.col_.insert(target_it, *cell_tmp);
++          if (cell_tmp->coefficient_ != coeff_field_.additive_identity())
++            target.col_.insert(target_it, *cell_tmp);
++          else
++            cell_pool_.destroy(cell_tmp);
+ 
+           ++other_it;
+         } else {  // it1->key == it2->key
+@@ -527,7 +530,10 @@
+     while (other_it != other.end()) {
+       Cell * cell_tmp = cell_pool_.construct(Cell(other_it->first, coeff_field_.additive_identity(), &target));
+       cell_tmp->coefficient_ = coeff_field_.plus_times_equal(cell_tmp->coefficient_, other_it->second, w);
+-      target.col_.insert(target.col_.end(), *cell_tmp);
++      if (cell_tmp->coefficient_ != coeff_field_.additive_identity())
++        target.col_.insert(target.col_.end(), *cell_tmp);
++      else
++        cell_pool_.destroy(cell_tmp);
+ 
+       ++other_it;
+     }

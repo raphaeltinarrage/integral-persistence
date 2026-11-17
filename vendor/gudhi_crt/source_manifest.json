@@ -1,0 +1,40 @@
+{
+  "repository": "https://github.com/GUDHI/gudhi-devel",
+  "tag": "tags/gudhi-release-3.6.0",
+  "commit": "de8bd5109fcdc6d4d200c74685bab031d953d2af",
+  "version": "3.6.0",
+  "license": "MIT",
+  "source_modules": [
+    "Simplex_tree",
+    "Persistent_cohomology",
+    "common"
+  ],
+  "files": {
+    "LICENSE": "7b14fde4941e44b2cf680367b1d5ef3295eb0808d4ab1e59e19f2e9355fabd94",
+    "gudhi/Clock.h": "6543e1ef441b806bcd27e973f5bbcbc8ca726635cfac47172f9dfda558f7ca1e",
+    "gudhi/Debug_utils.h": "6a9b3e963cb037f99f352566c762c1d65309efe46bcdf32be4b49c5c14c56793",
+    "gudhi/Null_output_iterator.h": "33cd86b7871f364669f097dcf0a9e33bf0b93aa8462f8ba60d59b8643f252801",
+    "gudhi/Off_reader.h": "2182d43095147edb01a02b0b0d0e4670f5692fecb8c01ac2fef46e64d8e2a7d6",
+    "gudhi/Persistent_cohomology/Field_Zp.h": "ba2de48313a05990506c80dee648bf4e87115ffd00a3fed30d021d04865cd572",
+    "gudhi/Persistent_cohomology/Multi_field.h": "4be8e9293e4a959d57fbe2df3464f27e6a142cda6edbd859533f7f96db711186",
+    "gudhi/Persistent_cohomology/Persistent_cohomology_column.h": "d094330ac4062dcdee890b82ff66bc5bdfb676baafda02e06b33f8c1b7890059",
+    "gudhi/Persistent_cohomology.h": "7a08fa00c67f97e04afa5254b344d4f52f04c2297069066c96b01221c574b09c",
+    "gudhi/Point.h": "fa7d1f67b4a789d699503d4314dd95e23b1ca7f0495e701708cb91cb64557985",
+    "gudhi/Points_3D_off_io.h": "7307bd7ab6311f63354bb991db44d3ff33145baac9c4ab470aa0486cfd501c28",
+    "gudhi/Points_off_io.h": "91d2f0f1df1cfb3c0b97e9795bb044e258532ebe34155e20906a37dec53eb5bb",
+    "gudhi/Simple_object_pool.h": "0dcfdb9fa839ac2320ff066d28dcee7893ca7c5875488f903be1ca008ffbe233",
+    "gudhi/Simplex_tree/Simplex_tree_iterators.h": "9e0a843bcbf7f60b25034da1b8339e67e5d3cfbf8a1fcbec5a822cae4f3f7b6a",
+    "gudhi/Simplex_tree/Simplex_tree_node_explicit_storage.h": "05ae5ff65bc120b1d050353e116a107adef7784810656d83d0914c07f73fd787",
+    "gudhi/Simplex_tree/Simplex_tree_siblings.h": "4ac80cfaa7006ee9fee6ce5df60d0f1a3547134cee8f2f19fd943ad13363d1ab",
+    "gudhi/Simplex_tree/indexing_tag.h": "a9a742156c17832c39de272f9d892daaa0863dad532309b67cd14d44cdcd5706",
+    "gudhi/Simplex_tree.h": "9d5f1d1643144b5fc1789a122da193efb8ac1360967ef858108cda03d05ba4dd",
+    "gudhi/Unitary_tests_utils.h": "b82648e0e7e11115889160f4f78264f1754cfe043379ba2d1efcef6216c68989",
+    "gudhi/allocator.h": "84dbeb73cc8ec77a605ba2259418b2c13324490f197d4bba952fe2c7b8cb22ed",
+    "gudhi/console_color.h": "d1cba8381aea22ca9ea74f9922ae554ed1d4f94ae828c17c282060067a768865",
+    "gudhi/distance_functions.h": "afd0199e93b4fbec6aac04ff5d234f761cbf8b727588be6a7d121233217d837e",
+    "gudhi/graph_simplicial_complex.h": "5aecb9a8e931e7ddaa2acc1ea2f39a0f64f05b893b8aef2ba37a3917e5674e12",
+    "gudhi/random_point_generators.h": "7175e2eb4488608e54cdf2161b053e468698d6812772e02d672bb9f308a8b7de",
+    "gudhi/reader_utils.h": "d89164019b6aa6dc64503c0803bf061be19892dce3acd953205a1435db182313",
+    "gudhi/writing_persistence_to_file.h": "22cff91619e646bd16b1234c07a9f76131977bdcd7fa2fb46b0aea70e1b9e992"
+  }
+}
