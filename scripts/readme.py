@@ -33,6 +33,7 @@ triangles = [
     (1, 2, 5), (1, 3, 4), (1, 4, 5), (2, 3, 4), (2, 3, 5),
 ]
 simplices = vertices + edges + triangles
+# GUDHI filtration
 st = gd.SimplexTree()
 for i, simplex in enumerate(simplices): # simplex-wise filtration
     st.insert(simplex, filtration=i)

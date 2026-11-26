@@ -10,8 +10,7 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
-from _gudhi_crt import run_native
-
+from _benchmark_gudhi_crt import run_native
 
 def closure(facets):
     return sorted({face for facet in facets for size in range(1, len(facet) + 1)

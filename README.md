@@ -29,7 +29,9 @@ print(state.pivot_profile(prime=7))    # [0, 3]  (pivots over F_7)
 print(state.pivot_profile(prime=11))   # [2, 1]  (pivots over F_11)
 ```
 
-Pivots refer to the augmented matrix `[I_m; A]`.
+The input matrix $D$ has shape $n\times m$.
+Its augmented matrix is $\widetilde{D} = \left(\begin{smallmatrix}I_m\\D\end{smallmatrix}\right)$; it has shape $(n+m)\times m$.
+In the cell above, pivots refer to $\widetilde{D}$.
 
 ### Filtration input: list of simplices and times
 
@@ -47,6 +49,7 @@ print(result[degree].field.exceptional_primes)   # []
 ### Filtration input: GUDHI simplex tree
 
 ```python
+from itertools import combinations
 import gudhi as gd
 
 # Projective plane
@@ -57,14 +60,16 @@ triangles = [
     (1, 2, 5), (1, 3, 4), (1, 4, 5), (2, 3, 4), (2, 3, 5),
 ]
 simplices = vertices + edges + triangles
+
+# GUDHI filtration
 st = gd.SimplexTree()
 for i, simplex in enumerate(simplices): # simplex-wise filtration
     st.insert(simplex, filtration=i)
 
 degree = 1
 result = ip.persistence(st, degrees=[degree], modules=("field",))
-print(result[degree].field.exceptional_primes)   # [2]
 print(result[degree].field.field_independent)    # False
+print(result[degree].field.exceptional_primes)   # [2]
 ```
 
 ## Three sources of torsion
@@ -93,8 +98,6 @@ print(result[degree].free.field_independent)     # False
 ### **Tensor torsion** in the projective plane
 
 ```python
-from itertools import combinations
-
 # Projective plane
 triangles = [
     (0, 1, 2), (0, 1, 3), (0, 2, 4), (0, 3, 5), (0, 4, 5),
@@ -152,7 +155,7 @@ print(result[degree].free.field_independent)     # True
 
 - Benchmark against other methods: [scripts/benchmark.py](scripts/benchmark.py).
 - Torsion in random Rips filtrations: [scripts/random_rips.py](scripts/random_rips.py).
-
+- Torsion in torus knots in $\mathbb{R}^4$: [scripts/torus_knots.py](scripts/torus_knots.py).
 
 ## Linux installation
 
