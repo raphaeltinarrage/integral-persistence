@@ -8,35 +8,6 @@ import numpy as np
 
 import integral_persistence as ip
 
-# %% ------ Read me  ------------------------------------------------------
-
-print("\nSimple matrix example...")
-state = ip.reduction([[2, 1], [0, 3]])
-print(state.primes)                   # [2, 3]
-print(state.generic_pivots)           # [2, 3]
-print(state.pivot_profile(prime=2))   # [0, 3]
-print(state.pivot_profile(prime=3))   # [2, 1]
-
-print("\nSimple filtration example...")
-simplices = [(0,), (1,), (2,), (0, 1), (0, 2), (1, 2), (0, 1, 2)]
-times = [0, 0, 0, 1, 1, 1, 2]
-result = ip.persistence(simplices, times, degrees=[0,1,2], modules=("field",))
-print(result[1].field.exceptional_primes)   # []
-print(result[1].field.field_independent)    # True
-
-print("\nExample with torsion...")
-vertices = [[i] for i in range(6)]
-edges = list(combinations(range(6), 2))
-triangles = [
-    (0, 1, 2), (0, 1, 3), (0, 2, 4), (0, 3, 5), (0, 4, 5),
-    (1, 2, 5), (1, 3, 4), (1, 4, 5), (2, 3, 4), (2, 3, 5),
-]
-simplices = vertices + edges + triangles
-times = list(range(len(simplices)))
-result = ip.persistence(simplices, times, degrees=[1], modules=("field",))
-print(result[1].field.exceptional_primes)   # [2]
-print(result[1].field.field_independent)    # False
-
 # %% ------ Integer matrix input ------------------------------------------------------
 
 # Integer matrix (dense rows)
