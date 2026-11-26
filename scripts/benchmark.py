@@ -187,14 +187,6 @@ Discovered primes:
 
 # %% ------ BENCHMARK 1: All methods
 
-# %% Full parameters for the paper
-
-c = 2.7538
-REPETITIONS = 100
-TRIALS = 5
-NUMBER_VERTICES = [30, 40, 50]
-TRIAL_TIMEOUT_SECONDS = 60.0
-
 # %% Small parameters for testing 
 
 c = 2.7538
@@ -202,6 +194,14 @@ REPETITIONS = 3
 TRIALS = 2
 NUMBER_VERTICES = [30,50]
 TRIAL_TIMEOUT_SECONDS = 10.0
+
+# %% Full parameters for the paper
+
+c = 2.7538
+REPETITIONS = 100
+TRIALS = 5
+NUMBER_VERTICES = [30, 40, 50]
+TRIAL_TIMEOUT_SECONDS = 60.0
 
 # %% Run
 
@@ -230,21 +230,21 @@ for n in NUMBER_VERTICES:
 
 # %% --- BENCHMARK 2: Against modular reconstruction only
 
-# %% Full parameters for the paper
-
-c = 2.7538
-RUNNERS = {"modular": run_modular, "ours": run_ours}
-NUMBER_VERTICES = range(10,90+1,10)
-REPETITIONS = 100
-TRIALS = 2
-TRIAL_TIMEOUT_SECONDS = 60
-
 # %% Small parameters for testing 
 
 c = 2.7538
 RUNNERS = {"modular": run_modular, "ours": run_ours}
 NUMBER_VERTICES = [20,30,40]
 REPETITIONS = 5
+TRIALS = 2
+TRIAL_TIMEOUT_SECONDS = 60
+
+# %% Full parameters for the paper
+
+c = 2.7538
+RUNNERS = {"modular": run_modular, "ours": run_ours}
+NUMBER_VERTICES = range(10,90+1,10)
+REPETITIONS = 100
 TRIALS = 2
 TRIAL_TIMEOUT_SECONDS = 60
 

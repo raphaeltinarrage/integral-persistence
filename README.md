@@ -30,7 +30,7 @@ print(state.pivot_profile(prime=11))   # [2, 1]  (pivots over F_11)
 ```
 
 The input matrix $D$ has shape $n\times m$.
-Its augmented matrix is $\widetilde{D} = \begin{pmatrix}I_m\\D\end{pmatrix}$; it has shape $(n+m)\times m$.
+Its augmented matrix is $`\widetilde{D} = \begin{pmatrix}I_m\\D\end{pmatrix}`$; it has shape $(n+m)\times m$.
 In the cell above, pivots refer to $\widetilde{D}$.
 
 ### Filtration input: list of simplices and times

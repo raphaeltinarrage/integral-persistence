@@ -142,20 +142,20 @@ def analyze_results(results):
                                   tensor=sum(r["tensor_torsion_count"] for r in sources))
     return output
 
-# %% Full parameters for the paper
-
-SEED = 0
-N_POINTS = 1000
-DIMENSIONS = [3, 4, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-REPETITIONS = 1000
-EDGE_FRACTION = 1/10
-
 # %% Small parameters for testing 
 
 SEED = 0
 N_POINTS = 1000
 DIMENSIONS = [40, 50]
 REPETITIONS = 4
+EDGE_FRACTION = 1/10
+
+# %% Full parameters for the paper
+
+SEED = 0
+N_POINTS = 1000
+DIMENSIONS = [3, 4, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+REPETITIONS = 1000
 EDGE_FRACTION = 1/10
 
 # %% Run and save
