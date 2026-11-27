@@ -1,0 +1,43 @@
+{
+  "schema_version": 3,
+  "n_points": 1000,
+  "dimensions": [
+    3,
+    4,
+    5,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100
+  ],
+  "repetitions": 1000,
+  "seed": 0,
+  "edge_fraction": 0.1,
+  "target_edges": 49950,
+  "edge_selection": "shortest_edges_fixed_count",
+  "edge_tie_break": "lexicographic vertex pair",
+  "simplex_order": "GUDHI get_filtration(), including its tie order",
+  "distribution": "uniform [0,1]^d",
+  "homology_degree": 1,
+  "detector": "native_main_algorithm / actual-radius and simplexwise H1 barcodes",
+  "free_condition": "tensor.rips_exceptional_primes is nonempty",
+  "space_torsion": "tensor.rips_betti_changing_primes: pointwise H1 dimensions differ from Q at actual radii",
+  "map_torsion": "free.rips_exceptional_primes: free H1 barcode differs from Q at actual radii",
+  "source_denominator": "trials with actual-radius field-coefficient H1 dependence",
+  "sources_may_overlap": true,
+  "tensor_presentation_method": "forest",
+  "free_filter_relations": false,
+  "nested_modules": [
+    "tensor",
+    "free"
+  ],
+  "flat_detection_fields": "tensor",
+  "gudhi_version": "3.13.0",
+  "numpy_version": "2.5.4"
+}

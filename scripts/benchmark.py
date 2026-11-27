@@ -12,6 +12,7 @@ Benchmark 2: compares modular reconstruction and ours across vertex counts.
 """
 
 # %% Imports
+# %cd scripts
 
 from pathlib import Path
 import math
@@ -22,17 +23,14 @@ from tqdm import tqdm
 
 import integral_persistence as ip
 from _benchmark_filtrations import generate_triangle_order, build_filtration
-from _benchmark_plotting import plot_comparison_results, plot_comparison_curves, plot_comparison_by_vertices
-from _benchmark_methods import (
-    run_brute_force, run_modular, run_omnifield, run_ours,
-    run_fresh_trial, summarize_trials,
-)
+from _benchmark_plotting import plot_comparison_results, plot_comparison_curves, plot_comparison_by_vertices, vertex_comparison_data
+from _benchmark_methods import run_brute_force, run_modular, run_omnifield, run_ours, run_fresh_trial, summarize_trials
 
 # %% Functions
 
 TRIAL_TIMEOUT_SECONDS = 10.0
 METHOD_TIMEOUT_SECONDS = {}
-MODULAR_MEMORY_MB = 1024  # Native address space in MiB; None adds no cap.
+MODULAR_MEMORY_MB = 1024  # Memory cap for modular reconstruction
 _DEFAULT_MODULAR_MEMORY = object()
 
 def run_trial_fresh(method, order, model="LM", timeout=None, on_timeout="raise",
@@ -289,9 +287,21 @@ print(f"Saved to {results_path}")
 fig_vertices = plot_comparison_by_vertices(
     RESULTS_ALL,
     vertices=list(NUMBER_VERTICES)[:len(RESULTS_ALL)],
-    trials=TRIALS, c=c, time_unit="s", height=7.0,
+    trials=TRIALS, c=c, time_unit="s", height=7.0, memory_limit_mb=MODULAR_MEMORY_MB,
 )
 fig_vertices.savefig(output_directory / f"running_time_by_vertices-{parameters}.pdf", dpi=250, bbox_inches="tight", pad_inches=0.05)
+
+# Analyse results
+
+summary = vertex_comparison_data(
+    RESULTS_ALL,
+    vertices=list(NUMBER_VERTICES)[:len(RESULTS_ALL)],
+    trials=TRIALS,
+)
+j = summary["vertices"].index(90)
+m = summary["methods"].index("ours")
+mean_seconds = summary["mean_seconds"][m][j]
+print(f"Our method at n=90: {mean_seconds:.3f} s") # Our method at n=90: 25.168 s
 
 # %% ------ EXPERIMENT: Large torsion at n=70
 

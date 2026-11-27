@@ -405,12 +405,6 @@ def plot_comparison_results(RESULTS, *, n, count, trials):
         fig.legend(handles=handles, loc="upper center",
                    bbox_to_anchor=(0.5, 1 - 0.40 / height),
                    ncol=4, frameon=False, fontsize=10)
-        # if has_failures:
-        #     fig.text(0.5, 0.015,
-        #              "× marks failed trials. Bars average completed trials only; "
-        #              "limits include worker startup. No phase time is imputed.",
-        #              ha="center", fontsize=8, color="#555555")
-        # tight_layout reserves the title; add room below it for the legend.
         fig.tight_layout(rect=(0, 0, 1, 1 - 0.45 / height), h_pad=2.0)
 
     indices = np.arange(cases)
@@ -447,7 +441,7 @@ def plot_comparison_results(RESULTS, *, n, count, trials):
     return fig_all, fig_groups
 
 def plot_comparison_curves(RESULTS, *, n, count, trials, log_scale=True,
-                           time_unit="ms", height=4.9, figsize=None):
+                           time_unit="ms", height=4.9, figsize=None, timeout_seconds=None):
     """Plot mean summed phase time against the number of exceptional primes.
 
     Sum the four measured phases of each completed trial, then average within
@@ -474,7 +468,6 @@ def plot_comparison_curves(RESULTS, *, n, count, trials, log_scale=True,
     factor = 1000.0 if time_unit == "ms" else 1.0
     methods, times, completed, attempted, prime_counts, failures = _comparison_plot_data(RESULTS, trials)
     labels = ["Brute force", "Modular reconstruction", "Omnifield", "Our method"]
-    # colors = ["#0072B2", "#E69F00", "#CC79A7", "#222222"]
     colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#222222"]
     markers = ["s", "^", "D", "o"]
     groups = np.unique(prime_counts)
@@ -500,8 +493,6 @@ def plot_comparison_curves(RESULTS, *, n, count, trials, log_scale=True,
     missed = attempts - successes
     has_failures = bool(np.any(missed))
 
-    # Keep the reference's main curves and shared-x case-count strip. Censored
-    # counts get their own strip so their vertical position cannot imply time.
     rows = 3 if has_failures else 2
     ratios = [4.5, 1.1, 0.9] if has_failures else [4.5, 0.9]
     if figsize is None:
@@ -540,22 +531,21 @@ def plot_comparison_curves(RESULTS, *, n, count, trials, log_scale=True,
         failure_ax.set_yticks(range(len(methods)), short_labels)
         failure_ax.set_ylim(len(methods) - 0.5, -0.5)
         failure_label = "Not\ncompleted" if np.any(failure_counts[:, :, 1:]) else "Timed out"
+        failure_label += "\n(limit: 60 s)"
         failure_ax.set_ylabel(failure_label, rotation=90, ha="center", va="bottom",
                               fontsize=11, labelpad=8)
         failure_ax.tick_params(axis="both", length=0, labelbottom=False, labelsize=9)
-#        failure_ax.text(1, 1.04, "T: timeout · M: memory limit · E: error",
-#                        transform=failure_ax.transAxes, ha="right", va="bottom",
-#                        fontsize=7, color="#555555")
         for m in range(len(methods)):
             for j, k in enumerate(groups):
                 total_failures = int(failure_counts[m, j].sum())
-                text = f"{total_failures}/{attempts[m, j]}"
-#                counts = failure_counts[m, j]
-#                text = " · ".join(f"{kind} {number}/{attempts[m, j]}"
-#                                  for kind, number in zip(("T", "M", "E"), counts)
-#                                  if number) or "–"
-                failure_ax.text(k, m, text, ha="center", va="center", fontsize=8,
-                                color=colors[m] if missed[m, j] else "#aeb5be")
+                # text = "-" if total_failures == 0 else f"{total_failures}/{attempts[m, j]}"
+                text = "-" if total_failures == 0 else f"{100 * total_failures / attempts[m, j]:.0f}%"
+                failure_ax.text(
+                    k, m, text,
+                    ha="center", va="center",
+                    fontsize=5.5,
+                    color=colors[m] if missed[m, j] else "#aeb5be",
+                )
         for spine in failure_ax.spines.values():
             spine.set_visible(False)
 
@@ -568,9 +558,7 @@ def plot_comparison_curves(RESULTS, *, n, count, trials, log_scale=True,
     cases_ax.set_yticks([])
     cases_ax.set_ylabel("Cases", rotation=0, ha="right", va="center",
                         fontsize=12, color="#414b57")
-    # Keep this label close to its panel instead of aligning it with the others.
     cases_ax.yaxis.set_label_coords(-0.01, 0.5)
-    # Every integer is visible for ordinary ranges; wide ranges avoid crowding.
     if len(grid) <= 35:
         cases_ax.set_xticks(grid)
     else:
@@ -591,17 +579,10 @@ def plot_comparison_curves(RESULTS, *, n, count, trials, log_scale=True,
     fig.legend(*ax.get_legend_handles_labels(), loc="upper center",
                bbox_to_anchor=(0.5, 1 - 0.40 / figure_height),
                ncol=4, frameon=False, fontsize=12)
-    # if has_failures:
-    #     fig.text(0.5, 0.10 / figure_height,
-    #              "Means use completed trials only; failures are counted separately. "
-    #              "Case sets may differ between methods.",
-    #              ha="center", fontsize=9, color="#555555")
-    # Reserve margins in inches so text stays separated as height changes.
     fig.subplots_adjust(left=0.14 if has_failures else 0.13, right=0.98, top=1 - 0.80 / figure_height,
                         bottom=(0.95 if has_failures else 0.65) / figure_height)
     fig.align_ylabels(axes)
     if has_failures:
-        # Align the first lines, rather than the units line of a multiline title.
         fig.canvas.draw()
         renderer = fig.canvas.get_renderer()
         label_axes = (ax, failure_ax)
@@ -612,7 +593,7 @@ def plot_comparison_curves(RESULTS, *, n, count, trials, log_scale=True,
 
 def plot_comparison_by_vertices(RESULTS_ALL, *, vertices, trials=1, c=None,
                                log_scale=True, time_unit="s", height=7.0,
-                               figsize=None):
+                               memory_limit_mb=None, figsize=None):
     """Compare modular reconstruction and ours over a sweep of vertex counts.
 
     ``vertices`` gives one n for each entry of RESULTS_ALL, in the same order.
@@ -682,29 +663,39 @@ def plot_comparison_by_vertices(RESULTS_ALL, *, vertices, trials=1, c=None,
         ax.text(0.5, 0.5, "No completed trials", transform=ax.transAxes,
                 ha="center", va="center", color="#a12622", fontsize=12)
 
-    failure_ax.set_yticks([0, 1], ["Modular reconstruction", "Ours"])
+    failure_ax.set_yticks([0, 1], ["Modular", "Ours"])
     failure_ax.set_ylim(1.6, -0.6)
-    failure_label = "Not completed" if extra_failures else "Timed out"
-    limits = data["timeout_limits_seconds"]
-    if limits:
-        failure_label += "\n(limit: " + ", ".join(f"{value:g}" for value in limits) + " s)"
-    failure_ax.set_ylabel(failure_label,
-                          rotation=90, ha="center", va="bottom", fontsize=11, labelpad=9)
-    failure_ax.tick_params(axis="both", length=0, labelbottom=False, labelsize=9)
+    if not extra_failures:
+        failure_label = "Timed out"
+        limits = data["timeout_limits_seconds"]
+        if limits:
+            failure_label += "\n(limit: " + ", ".join(f"{value:g}" for value in limits) + " s)"
     if extra_failures:
-        caption = "T: timeout · M: memory limit · E: error"
-        failure_ax.text(1, 1.02, caption, transform=failure_ax.transAxes,
-                        ha="right", va="bottom", fontsize=8, color="#555555")
+        failure_label = "Not completed"
+        limits = data["timeout_limits_seconds"]
+        failure_label += "\nT: time, M: memory"
+        failure_label += "\n(limits: " + ", ".join(f"{value:g}" for value in limits) + " s, "
+        failure_label += f"{memory_limit_mb:g} MB)"
+#        caption = "T: timeout · M: memory limit · E: error"
+#        failure_ax.text(1, 1.02, caption, transform=failure_ax.transAxes,
+#                        ha="right", va="bottom", fontsize=8, color="#555555")
+    failure_ax.set_ylabel(failure_label, rotation=90, ha="center", va="bottom", fontsize=11, labelpad=9)
+    failure_ax.tick_params(axis="both", length=0, labelbottom=False, labelsize=9)
     for m in range(2):
         for j, n in enumerate(x):
             total = attempted[m, j]
             timed_out, memory, errors = failures[m, j]
             if total == 0:
                 text = "not run"
+            elif timed_out + memory + errors == 0:
+                text = f"0/{total}"
             elif extra_failures:
                 text = f"T {timed_out}/{total}"
-                text += "".join(f"\n{label} {number}/{total}"
-                                for label, number in (("M", memory), ("E", errors)) if number)
+                text += "".join(
+                    f"\n{label} {number}/{total}"
+                    for label, number in (("M", memory), ("E", errors))
+                    if number
+                )
             else:
                 text = f"{timed_out}/{total}"
             failure_ax.text(n, m, text, ha="center", va="center", fontsize=11,
